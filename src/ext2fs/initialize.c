@@ -190,6 +190,9 @@ errcode_t ext2fs_initialize(const char *name, int flags,
 	assign_field(s_encoding);
 	assign_field(s_encoding_flags);
 
+//	if (ext2fs_has_feature_casefold(param))
+//		fs->encoding = ext2fs_load_nls_table(param->s_encoding);
+
 	if (super->s_feature_incompat & ~EXT2_LIB_FEATURE_INCOMPAT_SUPP) {
 		retval = EXT2_ET_UNSUPP_FEATURE;
 		goto cleanup;
@@ -293,6 +296,10 @@ retry:
 		  ext2fs_has_feature_64bit(super) ?
 		  EXT2_MIN_DESC_SIZE_64BIT : 0);
 
+	if (EXT2_DESC_SIZE(super) == 0) {
+		retval = EXT2_ET_UNEXPECTED_BLOCK_SIZE;
+		goto cleanup;
+	}
 	fs->desc_blocks = ext2fs_div_ceil(fs->group_desc_count,
 					  EXT2_DESC_PER_BLOCK(super));
 

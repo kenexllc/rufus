@@ -95,6 +95,9 @@ timegm(struct tm *tm)
 static struct tm *
 gmtime_r(const time_t *timer, struct tm *result)
 {
+#ifdef WIN32
+    return (gmtime_s(result, timer) == 0) ? result : NULL;
+#else
     struct tm *tmp = gmtime(timer);
 
     if (tmp) {
@@ -102,6 +105,7 @@ gmtime_r(const time_t *timer, struct tm *result)
         return result;
     }
     return tmp;
+#endif
 }
 #endif
 
@@ -109,6 +113,9 @@ gmtime_r(const time_t *timer, struct tm *result)
 static struct tm *
 localtime_r(const time_t *timer, struct tm *result)
 {
+#ifdef WIN32
+    return (localtime_s(result, timer) == 0) ? result : NULL;
+#else
     struct tm *tmp = localtime(timer);
 
     if (tmp) {
@@ -116,6 +123,7 @@ localtime_r(const time_t *timer, struct tm *result)
         return result;
     }
     return tmp;
+#endif
 }
 #endif
 
@@ -373,6 +381,9 @@ iso9660_set_ltime_with_timezone(const struct tm *p_tm,
 
   if (!p_tm) return;
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wformat-truncation"
+#endif
   snprintf(_pvd_date, 17,
            "%4.4d%2.2d%2.2d" "%2.2d%2.2d%2.2d" "%2.2d",
            p_tm->tm_year + 1900, p_tm->tm_mon + 1, p_tm->tm_mday,
@@ -632,7 +643,8 @@ iso9660_set_pvd(void *pd,
   memset(&ipd,0,sizeof(ipd)); /* paranoia? */
 
   /* magic stuff ... thatis CD XA marker... */
-  strncpy(((char*)&ipd)+ISO_XA_MARKER_OFFSET, ISO_XA_MARKER_STRING,8);
+  strncpy(((char*)&ipd)+ISO_XA_MARKER_OFFSET, ISO_XA_MARKER_STRING,
+          strlen(ISO_XA_MARKER_STRING)+1);
 
   ipd.type = to_711(ISO_VD_PRIMARY);
   iso9660_strncpy_pad (ipd.id, ISO_STANDARD_ID, 5, ISO9660_DCHARS);
@@ -717,7 +729,7 @@ iso9660_dir_add_entry_su(void *dir,
   unsigned int offset = 0;
   uint32_t dsize = from_733(idr->size);
   int length, su_offset;
-  struct tm temp_tm;
+  struct tm temp_tm = { 0 };
   cdio_assert (sizeof(iso9660_dir_t) == 33);
 
   if (!dsize && !idr->length)

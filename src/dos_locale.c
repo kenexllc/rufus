@@ -1,7 +1,7 @@
 /*
  * Rufus: The Reliable USB Formatting Utility
  * DOS keyboard locale setup
- * Copyright © 2011-2013 Pete Batard <pete@akeo.ie>
+ * Copyright © 2011-2021 Pete Batard <pete@akeo.ie>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,11 @@
 
 #include "rufus.h"
 
+#if defined(_MSC_VER)
+// We have a bunch of \xCD characters in this file that MS doesn't like
+#pragma warning(disable: 4819)
+#endif
+
 /*
  * Note: if you want a book that can be used as a keyboards and codepages bible, I
  * would recommend the "OS/2 Warp Server for e-business - Keyboards and Codepages".
@@ -37,7 +42,7 @@
  */
 
 /* WinME DOS keyboard 2 letter codes & supported keyboard ID(s), as retrieved
- * from the Millenium disk image in diskcopy.dll on a Windows 7 system
+ * from the Millennium disk image in diskcopy.dll on a Windows 7 system
  *
  *	KEYBOARD.SYS
  *		GR 129*
@@ -414,7 +419,8 @@ static cp_list cp_hr_list[] = {
 	{ 59829, "Georgian"},
 	{ 60258, "Lat-Azeri"},
 	{ 60853, "Georgian (Alt)"},
-	{ 62306, "Cyr-Uzbek"}
+	{ 62306, "Cyr-Uzbek"},
+	{ 65001, "Unicode (UTF-8)" }
 };
 
 static const char* cp_to_hr(ULONG cp)
@@ -956,13 +962,13 @@ static ULONG fd_upgrade_cp(ULONG cp)
 	}
 }
 
-
 // Don't bother about setting up the country or multiple codepages
 BOOL SetDOSLocale(const char* path, BOOL bFreeDOS)
 {
 	FILE* fd;
 	char filename[MAX_PATH];
 	ULONG cp;
+	UINT actual_cp;
 	const char *kb;
 	int kbdrv;
 	const char* egadrv;
@@ -976,10 +982,18 @@ BOOL SetDOSLocale(const char* path, BOOL bFreeDOS)
 		kb = "us";
 		kbdrv = bFreeDOS?fd_get_kbdrv(kb):ms_get_kbdrv(kb);	// Always succeeds
 	}
+	assert(kbdrv >= 0);
 	uprintf("Will use DOS keyboard '%s' [%s]\n", kb, kb_to_hr(kb));
 
 	// Now get a codepage
 	cp = GetOEMCP();
+	if (cp == 65001) {
+		// GetOEMCP() may return UTF-8 for the codepage (65001),
+		// in which case we need to find the actual system OEM cp.
+		if (GetLocaleInfoA(GetUserDefaultUILanguage(), LOCALE_IDEFAULTCODEPAGE | LOCALE_RETURN_NUMBER,
+			(char*)&actual_cp, sizeof(actual_cp)))
+			cp = actual_cp;
+	}
 	egadrv = bFreeDOS?fd_get_ega(cp):ms_get_ega(cp);
 	if (egadrv == NULL) {
 		// We need to use the fallback CP from the keyboard we got above, as 437 is not always available

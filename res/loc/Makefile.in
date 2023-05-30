@@ -123,6 +123,7 @@ CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
+DLLTOOL = @DLLTOOL@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -189,6 +190,7 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -367,7 +369,7 @@ uninstall-am:
 all-local: embedded.loc
 
 embedded.loc: rufus.loc
-	$(AM_V_SED) -f embedded.sed $< > $@
+	$(AM_V_SED) -f $(srcdir)/embedded.sed $< > $@
 
 clean-local:
 	-rm -rf embedded.loc

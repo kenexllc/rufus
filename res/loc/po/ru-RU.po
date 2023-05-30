@@ -1,9 +1,11 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: 3.5\n"
+"Project-Id-Version: 3.22\n"
 "Report-Msgid-Bugs-To: pete@akeo.ie\n"
-"POT-Creation-Date: 2019-03-14 14:59+0300\n"
-"PO-Revision-Date: 2019-03-14 13:03+0000\n"
+"POT-Creation-Date: 2023-03-10 17:19+0000\n"
+"PO-Revision-Date: 2023-03-10 17:23+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11,9 +13,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Rufus-LanguageName: Russian (Русский)\n"
 "X-Rufus-LCID: 0x0419, 0x0819\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #. • IDD_DIALOG → IDS_DRIVE_PROPERTIES_TXT
 msgid "Drive Properties"
@@ -288,31 +288,31 @@ msgstr "байт"
 #.
 #. *Short* version of the kilobyte size suffix
 msgid "KB"
-msgstr "Кб"
+msgstr "КБ"
 
 #. • MSG_022
 #.
 #. *Short* version of the megabyte size suffix
 msgid "MB"
-msgstr "Мб"
+msgstr "МБ"
 
 #. • MSG_023
 #.
 #. *Short* version of the gigabyte size suffix
 msgid "GB"
-msgstr "Гб"
+msgstr "ГБ"
 
 #. • MSG_024
 #.
 #. *Short* version of the terabyte size suffix
 msgid "TB"
-msgstr "Тб"
+msgstr "ТБ"
 
 #. • MSG_025
 #.
 #. *Short* version of the pentabyte size suffix
 msgid "PB"
-msgstr "Пб"
+msgstr "ПБ"
 
 #. • MSG_027
 msgid "kilobytes"
@@ -477,7 +477,7 @@ msgstr "Ошибка записи."
 
 #. • MSG_066
 msgid "Installation failure"
-msgstr "Ошибка установки."
+msgstr "Ошибка установки"
 
 #. • MSG_067
 msgid "Could not open media. It may be in use by another process. Please re-plug the media and try again."
@@ -493,7 +493,7 @@ msgstr "Невозможно скопировать файлы на выбран
 
 #. • MSG_070
 msgid "Cancelled by user."
-msgstr "Отменено пользователем"
+msgstr "Отменено пользователем."
 
 #. • MSG_071
 #.
@@ -582,7 +582,6 @@ msgstr ""
 "Файл будет загружен в текущую директорию, а в случае наличия '%s' - заменен автоматически."
 
 #. • MSG_085
-#, fuzzy
 msgid "Downloading %s"
 msgstr "Загружено %s"
 
@@ -667,7 +666,7 @@ msgstr "Ограничения файловой системы"
 
 #. • MSG_100
 msgid "This ISO image contains a file larger than 4 GB, which is more than the maximum size allowed for a FAT or FAT32 file system."
-msgstr "Этот ISO-образ содержит файл размером более 4 Гб, что недопустимо при использовании файловой системы FAT или FAT32"
+msgstr "Этот ISO-образ содержит файл размером более 4 ГБ, что недопустимо для файловой системы FAT или FAT32."
 
 #. • MSG_101
 msgid "Missing WIM support"
@@ -749,7 +748,7 @@ msgstr "Несовместимый размер кластера"
 #.
 #. "%d:%02d" is a duration (mins:secs)
 msgid "Formatting a large UDF volumes can take a lot of time. At USB 2.0 speeds, the estimated formatting duration is %d:%02d, during which the progress bar will appear frozen. Please be patient!"
-msgstr "Форматирование в Large UDF-тома занимает много времени..."
+msgstr "Форматирование больших томов UDF может занять много времени. При скоростях USB 2.0 расчетная продолжительность форматирования составляет %d:%02d, в течение которой индикатор выполнения будет заморожен. Пожалуйста, будьте терпеливы!"
 
 #. • MSG_113
 msgid "Large UDF volume"
@@ -810,7 +809,7 @@ msgstr "Стандартная установка Windows"
 #. http://en.wikipedia.org/wiki/Windows_To_Go in your language.
 #. Otherwise, you may add a parenthesis eg. "Windows To Go (<hint at what it does>)"
 msgid "Windows To Go"
-msgstr "Windows To Go"
+msgstr ""
 
 #. • MSG_119
 msgid "advanced drive properties"
@@ -948,8 +947,8 @@ msgid "Download using a browser"
 msgstr "Скачать с помощью браузера"
 
 #. • MSG_144
-msgid "Temporarily banned by Microsoft for requesting too many downloads - Please try again later..."
-msgstr "Microsoft временно заблокировала запрос из-за слишком большого количества загрузок. Повторите попытку позже..."
+msgid "Download of Windows ISOs is unavailable due to Microsoft having altered their website to prevent it."
+msgstr "Microsoft временно заблокировала загрузку ISO-образов Windows из-за большого количества загрузок."
 
 #. • MSG_145
 msgid "PowerShell 3.0 or later is required to run this script."
@@ -1099,7 +1098,7 @@ msgstr "Версия %d.%d (Build %d)"
 
 #. • MSG_176
 msgid "English translation: Pete Batard <mailto:pete@akeo.ie>"
-msgstr "Русский перевод: Кирилл Иванов <mailto:tchack@rambler.ru>"
+msgstr "Русский перевод:\\line• Кирилл Иванов <mailto:tchack@rambler.ru>\\line• Дмитрий Ерохин <mailto:erodim@mail.ru>"
 
 #. • MSG_177
 msgid "Report bugs or request enhancements at:"
@@ -1196,7 +1195,7 @@ msgid ""
 msgstr ""
 "ВАЖНО: ЭТОТ ДИСК ИСПОЛЬЗУЕТ НЕСТАНДАРТНЫЙ РАЗМЕР СЕКТОРА!\n"
 "\n"
-"Обычно диски используют 512 Кб размер сектора, но этот диск использует %d-байт. В большинстве случаев это означает, что вы НЕ СМОЖЕТЕ загрузиться с этого диска.\n"
+"Обычно диски используют 512 байт размер сектора, но этот диск использует %d-байт. В большинстве случаев это означает, что вы НЕ СМОЖЕТЕ загрузиться с этого диска.\n"
 "Rufus попытается создать загрузочный диск, но НЕ ГАРАНТИРУЕТСЯ, что он будет работать."
 
 #. • MSG_197
@@ -1206,6 +1205,10 @@ msgstr "Обнаружен нестандартный размер сектор�
 #. • MSG_198
 msgid "'Windows To Go' can only be installed on a GPT partitioned drive if it has the FIXED attribute set. The current drive was not detected as FIXED."
 msgstr "'Windows To Go' может использоваться только с GPT разделом диска и если диск является ФИКСИРОВАННЫМ. Выбранный диск не является ФИКСИРОВАННЫМ."
+
+#. • MSG_199
+msgid "This feature is not available on this platform."
+msgstr "Эта функция недоступна на данной платформе."
 
 #. • MSG_201
 msgid "Cancelling - Please wait..."
@@ -1292,9 +1295,9 @@ msgstr "Сохранен %s"
 
 #. • MSG_217
 #.
-#. Formatting status (make sure you use a double % to print the percent sign)
-msgid "Formatting: %0.1f%% completed"
-msgstr "Форматирование: %0.1f%% выполнено"
+#. Formatting status
+msgid "Formatting: %s"
+msgstr "Форматирование: %s"
 
 #. • MSG_218
 msgid "Creating file system: Task %d/%d completed"
@@ -1313,8 +1316,8 @@ msgid "Formatting (%s) - estimated duration %d:%02d..."
 msgstr "Форматирование (%s) - Окончание через %d:%02d..."
 
 #. • MSG_221
-msgid "Setting Label (This may take a while)..."
-msgstr "Установка метки (Это может занять время)..."
+msgid "Setting label (%s)..."
+msgstr "Установка метки (%s)..."
 
 #. • MSG_222
 #.
@@ -1343,11 +1346,11 @@ msgid "Closing existing volume..."
 msgstr "Закрытие существующего раздела..."
 
 #. • MSG_228
-msgid "Writing master boot record..."
+msgid "Writing Master Boot Record..."
 msgstr "Создание главной загрузочной записи..."
 
 #. • MSG_229
-msgid "Writing partition boot record..."
+msgid "Writing Partition Boot Record..."
 msgstr "Создание загрузочной записи раздела..."
 
 #. • MSG_230
@@ -1355,12 +1358,12 @@ msgid "Copying DOS files..."
 msgstr "Копирование DOS-файлов..."
 
 #. • MSG_231
-msgid "Copying ISO files..."
-msgstr "Копирование ISO-файлов..."
+msgid "Copying ISO files: %s"
+msgstr "Копирование ISO-файлов: %s"
 
 #. • MSG_232
-msgid "Win7 EFI boot setup (This may take a while)..."
-msgstr "Настройка Win7 EFI boot (Это может занять время)..."
+msgid "Win7 EFI boot setup (%s)..."
+msgstr "Настройка EFI-загрузки Win7 (%s)..."
 
 #. • MSG_233
 msgid "Finalizing, please wait..."
@@ -1395,8 +1398,8 @@ msgid "Partitioning (%s)..."
 msgstr "Разметка раздела (%s)..."
 
 #. • MSG_239
-msgid "Deleting partitions..."
-msgstr "Удаление разделов..."
+msgid "Deleting partitions (%s)..."
+msgstr "Удаление разделов (%s)..."
 
 #. • MSG_240
 #.
@@ -1411,8 +1414,8 @@ msgstr ""
 "Обновление будет удалено. Пожалуйста, проверьте журнал для получения более подробной информации."
 
 #. • MSG_241
-msgid "Downloading: %0.1f%%"
-msgstr "Загружено: %0.1f%%"
+msgid "Downloading: %s"
+msgstr "Загружено: %s"
 
 #. • MSG_242
 msgid "Failed to download file."
@@ -1493,8 +1496,8 @@ msgid "NTFS compression"
 msgstr "NTFS-компрессия"
 
 #. • MSG_261
-msgid "Writing image: %0.1f%% completed"
-msgstr "Запись образа: %0.1f%% выполнено"
+msgid "Writing image: %s"
+msgstr "Запись образа: %s"
 
 #. • MSG_262
 #.
@@ -1521,8 +1524,8 @@ msgid "Dual UEFI/BIOS mode"
 msgstr "Двойной UEFI/BIOS режим"
 
 #. • MSG_267
-msgid "Applying Windows image: %0.1f%% completed"
-msgstr "Использование Windows-образа: %0.1f%% завершено"
+msgid "Applying Windows image: %s"
+msgstr "Применение Windows-образа: %s"
 
 #. • MSG_268
 msgid "Applying Windows image..."
@@ -1537,8 +1540,8 @@ msgid "USB debug"
 msgstr "Режим USB отладки"
 
 #. • MSG_271
-msgid "Computing image checksums: %0.1f%% completed"
-msgstr "Вычисление контрольных сумм: %0.1f%% завершено"
+msgid "Computing image checksums: %s"
+msgstr "Вычисление контрольных сумм: %s"
 
 #. • MSG_272
 msgid "Compute the MD5, SHA1 and SHA256 checksums for the selected image"
@@ -1549,8 +1552,8 @@ msgid "Change the application language"
 msgstr "Изменить язык приложения"
 
 #. • MSG_274
-msgid "ISOHybrid image detected"
-msgstr "Обнаружен ISOHybrid-образ"
+msgid "%s image detected"
+msgstr "Обнаружен образ %s"
 
 #. • MSG_275
 #.
@@ -1619,8 +1622,8 @@ msgstr ""
 "Вы уверены, что хотите запустить этот файл?"
 
 #. • MSG_286
-msgid "Zeroing drive: %0.1f%% completed"
-msgstr "Обнуление диска: %0.1f%% выполнено"
+msgid "Zeroing drive: %s"
+msgstr "Обнуление диска: %s"
 
 #. • MSG_287
 msgid "Detection of non-USB removable drives"
@@ -1651,8 +1654,12 @@ msgid "Unsupported Windows version"
 msgstr "Неподдерживаемая версия Windows"
 
 #. • MSG_294
-msgid "This version of Windows is no longer supported by Rufus."
-msgstr "Эта версия Windows больше не поддерживается Rufus."
+msgid ""
+"This version of Windows is no longer supported by Rufus.\n"
+"The last version of Rufus compatible with this platform is v%d.%d."
+msgstr ""
+"Эта версия Windows больше не поддерживается Rufus.\n"
+"Последняя версия Rufus, совместимая с этой платформой - %d.%d."
 
 #. • MSG_295
 msgid "Warning: Unofficial version"
@@ -1717,12 +1724,223 @@ msgid "Create a disk image of the selected device"
 msgstr "Создание образа диска выбранного устройства"
 
 #. • MSG_305
-msgid "Use this option to indicate whether you want to use this device to install Windows on another disk, or if you want to run Windows directly from this drive (Windows To Go)."
-msgstr "Используйте этот параметр, чтобы указать, хотите ли вы использовать это устройство для установки Windows на другой диск, или если вы хотите запускать Windows непосредственно с этого диска (Windows To Go)."
+msgid "Use this option to indicate if you plan to install Windows to a different disk, or if you want to run Windows directly from this drive (Windows To Go)."
+msgstr "Используйте эту опцию, если вы хотите установить Windows на другой диск или запускать Windows прямо с этого диска (Windows To Go)."
 
 #. • MSG_306
 #.
 #. You can see this status message by pressing <Ctrl>-<Alt>-<Z> and then selecting START.
 #. It's the same as MSG_286 but with a process that *may* be faster, hence the name.
-msgid "Fast-zeroing drive: %0.1f%% completed"
-msgstr "Быстрое обнуление диска: %0.1f %% завершено"
+msgid "Fast-zeroing drive: %s"
+msgstr "Быстрое обнуление диска: %s"
+
+#. • MSG_307
+msgid "this may take a while"
+msgstr "это может занять время"
+
+#. • MSG_308
+msgid "VHD detection"
+msgstr "Обнаружение VHD"
+
+#. • MSG_309
+msgid "Compressed archive"
+msgstr "Сжатый архив"
+
+#. • MSG_310
+msgid ""
+"The ISO you have selected uses UEFI and is small enough to be written as an EFI System Partition (ESP). Writing to an ESP, instead of writing to a generic data partition occupying the whole disk, can be preferable for some types of installations.\n"
+"\n"
+"Please select the mode that you want to use to write this image:"
+msgstr ""
+"Выбранный ISO-образ использует UEFI и достаточно мал, чтобы его можно было записать как системный раздел EFI (ESP). Запись в ESP вместо записи в общий раздел данных, занимающий весь диск, может быть предпочтительнее для некоторых типов установок.\n"
+"\n"
+"Выберите режим записи этого образа:"
+
+#. • MSG_311
+msgid "Use %s (in the main application window) to enable."
+msgstr "Чтобы включить, используйте %s (в главном окне программы)."
+
+#. • MSG_312
+msgid "Extra hashes (SHA512)"
+msgstr "Дополнительные хеши (SHA512)"
+
+#. • MSG_313
+msgid "Save to VHD"
+msgstr "Сохранить в VHD"
+
+#. • MSG_314
+msgid "Compute image checksums"
+msgstr "Вычислить контрольные суммы образа"
+
+#. • MSG_315
+msgid "Multiple buttons"
+msgstr "Несколько кнопок"
+
+#. • MSG_316
+msgid "Number of passes"
+msgstr "Количество проходов"
+
+#. • MSG_317
+msgid "Disk ID"
+msgstr "Идентификатор диска"
+
+#. • MSG_318
+msgid "Default thread priority: %d"
+msgstr "Приоритет потока по умолчанию: %d"
+
+#. • MSG_319
+msgid "Ignore Boot Marker"
+msgstr "Игнорировать загрузочный маркер"
+
+#. • MSG_320
+msgid "Refreshing partition layout (%s)..."
+msgstr "Обновление макета раздела (%s)..."
+
+#. • MSG_321
+msgid ""
+"The image you have selected is an ISOHybrid, but its creators have not made it compatible with ISO/File copy mode.\n"
+"As a result, DD image writing mode will be enforced."
+msgstr ""
+"Выбранный образ - ISOHybrid, но создатели не сделали его совместимым с режимом копирования ISO/файла.\n"
+"Из-за этого будет применён режим записи образа DD."
+
+#. • MSG_322
+msgid "Unable to open or read '%s'"
+msgstr "Не удалось открыть или прочитать '%s'"
+
+#. • MSG_325
+msgid "Applying Windows customization: %s"
+msgstr "Применение настройки Windows: %s"
+
+#. • MSG_326
+msgid "Applying user options..."
+msgstr "Применение параметров пользователя..."
+
+#. • MSG_327
+msgid "Windows User Experience"
+msgstr "Опыт использования Windows"
+
+#. • MSG_328
+msgid "Customize Windows installation?"
+msgstr "Настроить установку Windows?"
+
+#. • MSG_329
+msgid "Remove requirement for 4GB+ RAM, Secure Boot and TPM 2.0"
+msgstr "Удалить требования 4 ГБ ОЗУ, безопасной загрузки и TPM 2.0"
+
+#. • MSG_330
+msgid "Remove requirement for an online Microsoft account"
+msgstr "Удалить требование сетевой учётной записи Microsoft"
+
+#. • MSG_331
+msgid "Disable data collection (Skip privacy questions)"
+msgstr "Отключить сбор данных (пропустить вопросы о конфиденциальности)"
+
+#. • MSG_332
+msgid "Prevent Windows To Go from accessing internal disks"
+msgstr "Запретить Windows To Go доступ к внутренним дискам"
+
+#. • MSG_333
+msgid "Create a local account with username:"
+msgstr "Создать локальную учётную запись с именем пользователя:"
+
+#. • MSG_334
+msgid "Set regional options to the same values as this user's"
+msgstr "Установить те же региональные параметры, что и для этого пользователя"
+
+#. • MSG_335
+msgid "Disable BitLocker automatic device encryption"
+msgstr "Отключить автоматическое шифрование устройств BitLocker"
+
+#. • MSG_336
+msgid "Persistent log"
+msgstr "Постоянный журнал"
+
+#. • MSG_900
+#.
+#. The following messages are for the Windows Store listing only and are not used by the application
+msgid "Rufus is a utility that helps format and create bootable USB flash drives, such as USB keys/pendrives, memory sticks, etc."
+msgstr "Rufus - это утилита для форматирования и создания загрузочных флеш-накопителей USB."
+
+#. • MSG_901
+msgid "Official site: %s"
+msgstr "Официальный сайт: %s"
+
+#. • MSG_902
+msgid "Source Code: %s"
+msgstr "Исходный код: %s"
+
+#. • MSG_903
+msgid "ChangeLog: %s"
+msgstr "Изменения: %s"
+
+#. • MSG_904
+#.
+#. The gnu.org website has many translations of the GPL (such as https://www.gnu.org/licenses/gpl-3.0.zh-cn.html, https://www.gnu.org/licenses/gpl-3.0.fr.html)
+#. Please make sure you try to locate the relevant https://www.gnu.org/licenses/gpl-3.0.<LANG-ID>.html for your language and use it here.
+msgid ""
+"This application is licensed under the terms of the GNU Public License (GPL) version 3.\n"
+"See https://www.gnu.org/licenses/gpl-3.0.en.html for details."
+msgstr ""
+"Это приложение - под лицензией GNU Public License (GPL) версии 3.\n"
+"Подробнее см. https://www.gnu.org/licenses/gpl-3.0.ru.html."
+
+#. • MSG_905
+#.
+#. Keyword for "boot" will be used for search in the Windows Store
+msgid "Boot"
+msgstr "Загрузочный"
+
+#. • MSG_910
+#.
+#. This and subsequent messages will be listed in the 'Features' section of the Windows Store page
+msgid "Format USB, flash card and virtual drives to FAT/FAT32/NTFS/UDF/exFAT/ReFS/ext2/ext3"
+msgstr "Форматировать USB, флешки и виртуальные диски в FAT/FAT32/NTFS/UDF/exFAT/ReFS/ext2/ext3"
+
+#. • MSG_911
+msgid "Create FreeDOS bootable USB drives"
+msgstr "Создать загрузочные USB-диски FreeDOS"
+
+#. • MSG_912
+msgid "Create bootable drives from bootable ISOs (Windows, Linux, etc.)"
+msgstr "Создать загрузочные диски из загрузочных ISO-образов (Windows, Linux и т.д.)"
+
+#. • MSG_913
+msgid "Create bootable drives from bootable disk images, including compressed ones"
+msgstr "Создать загрузочные диски из образов загрузочных дисков, в том числе сжатых"
+
+#. • MSG_914
+msgid "Create BIOS or UEFI bootable drives, including UEFI bootable NTFS"
+msgstr "Создать загрузочные диски BIOS или UEFI, включая загрузочный UEFI NTFS"
+
+#. • MSG_915
+msgid "Create 'Windows To Go' drives"
+msgstr "Создание дисков Windows To Go"
+
+#. • MSG_916
+msgid "Create Windows 11 installation drives for PCs that don't have TPM or Secure Boot"
+msgstr "Создать установочные диски Windows 11 для компьютеров без TPM или безопасной загрузки"
+
+#. • MSG_917
+msgid "Create persistent Linux partitions"
+msgstr "Создать постоянные разделы Linux"
+
+#. • MSG_918
+msgid "Create VHD/DD images of the selected drive"
+msgstr "Создать образы VHD/DD выбранного диска"
+
+#. • MSG_919
+msgid "Compute MD5, SHA-1, SHA-256 and SHA-512 checksums of the selected image"
+msgstr "Вычислить контрольные суммы MD5, SHA-1, SHA-256 и SHA-512 выбранного образа"
+
+#. • MSG_920
+msgid "Perform bad blocks checks, including detection of \"fake\" flash drives"
+msgstr "Проверить наличие плохих блоков, обнаружить \"поддельные\" флешки"
+
+#. • MSG_921
+msgid "Download official Microsoft Windows retail ISOs"
+msgstr "Загрузить официальные ISO-образы Windows"
+
+#. • MSG_922
+msgid "Download UEFI Shell ISOs"
+msgstr "Загрузить ISO-образы оболочки UEFI"

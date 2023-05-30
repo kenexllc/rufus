@@ -4,7 +4,7 @@
  * Copyright 1992-1994 Remy Card <card@masi.ibp.fr>
  * Copyright 1995-1999 Theodore Ts'o
  * Copyright 1999 David Beattie
- * Copyright 2011-2019 Pete Batard <pete@akeo.ie>
+ * Copyright 2011-2023 Pete Batard <pete@akeo.ie>
  *
  * This file is based on the minix file system programs fsck and mkfs
  * written and copyrighted by Linus Torvalds <Linus.Torvalds@cs.helsinki.fi>
@@ -377,7 +377,7 @@ static int64_t do_read (HANDLE hDrive, unsigned char * buffer, uint64_t tryout,
 	if (got < 0)
 		got = 0;
 	if (got & 511)
-		uprintf("%sWeird value (%ld) in do_read\n", bb_prefix, got);
+		uprintf("%sWeird value (%lld) in do_read\n", bb_prefix, got);
 	got /= block_size;
 	return got;
 }
@@ -399,7 +399,7 @@ static int64_t do_write(HANDLE hDrive, unsigned char * buffer, uint64_t tryout,
 	if (got < 0)
 		got = 0;
 	if (got & 511)
-		uprintf("%sWeird value (%ld) in do_write\n", bb_prefix, got);
+		uprintf("%sWeird value (%lld) in do_write\n", bb_prefix, got);
 	got /= block_size;
 	return got;
 }
@@ -408,7 +408,8 @@ static unsigned int test_rw(HANDLE hDrive, blk64_t last_block, size_t block_size
 							size_t blocks_at_once, int pattern_type, int nb_passes)
 {
 	const unsigned int pattern[BADLOCKS_PATTERN_TYPES][BADBLOCK_PATTERN_COUNT] =
-		{ BADBLOCK_PATTERN_SLC, BADCLOCK_PATTERN_MLC, BADBLOCK_PATTERN_TLC };
+		{ BADBLOCK_PATTERN_ONE_PASS, BADBLOCK_PATTERN_TWO_PASSES, BADBLOCK_PATTERN_SLC,
+		  BADCLOCK_PATTERN_MLC, BADBLOCK_PATTERN_TLC };
 	unsigned char *buffer = NULL, *read_buffer;
 	int i, pat_idx;
 	unsigned int bb_count = 0;
@@ -427,13 +428,12 @@ static unsigned int test_rw(HANDLE hDrive, blk64_t last_block, size_t block_size
 	}
 
 	buffer = allocate_buffer(2 * blocks_at_once * block_size);
-	read_buffer = buffer + blocks_at_once * block_size;
-
 	if (!buffer) {
 		uprintf("%sError while allocating buffers\n", bb_prefix);
 		cancel_ops = -1;
 		return 0;
 	}
+	read_buffer = buffer + blocks_at_once * block_size;
 
 	uprintf("%sChecking from block %lu to %lu (1 block = %s)\n", bb_prefix,
 		(unsigned long) first_block, (unsigned long) last_block - 1,
@@ -447,7 +447,7 @@ static unsigned int test_rw(HANDLE hDrive, blk64_t last_block, size_t block_size
 		if (detect_fakes && (pat_idx == 0)) {
 			srand((unsigned int)GetTickCount64());
 			id_offset = rand() * (block_size - sizeof(blk64_t)) / RAND_MAX;
-			uprintf("%sUsing offset %d for fake device check\n", bb_prefix, id_offset);
+			uprintf("%sUsing offset %zu for fake device check\n", bb_prefix, id_offset);
 		}
 		// coverity[dont_call]
 		pattern_fill(buffer, pattern[pattern_type][pat_idx], blocks_at_once * block_size);
@@ -463,7 +463,7 @@ static unsigned int test_rw(HANDLE hDrive, blk64_t last_block, size_t block_size
 			if (max_bb && bb_count >= max_bb) {
 				if (s_flag || v_flag) {
 					uprintf(abort_msg);
-					fprintf(log_fd, abort_msg);
+					fprintf(log_fd, "%s", abort_msg);
 					fflush(log_fd);
 				}
 				cancel_ops = -1;
@@ -511,7 +511,7 @@ static unsigned int test_rw(HANDLE hDrive, blk64_t last_block, size_t block_size
 			if (max_bb && bb_count >= max_bb) {
 				if (s_flag || v_flag) {
 					uprintf(abort_msg);
-					fprintf(log_fd, abort_msg);
+					fprintf(log_fd, "%s", abort_msg);
 					fflush(log_fd);
 				}
 				cancel_ops = -1;

@@ -1,7 +1,7 @@
 /*
  * Rufus: The Reliable USB Formatting Utility
  * PKI functions (code signing, etc.)
- * Copyright © 2015-2016 Pete Batard <pete@akeo.ie>
+ * Copyright © 2015-2023 Pete Batard <pete@akeo.ie>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -192,12 +192,24 @@ const char* WinPKIErrorString(void)
 		return "None of the signers of the cryptographic message or certificate trust list is trusted.";
 	case CERT_E_UNTRUSTEDROOT:
 		return "The root certificate is not trusted.";
+	case TRUST_E_SYSTEM_ERROR:
+		return "A system-level error occurred while verifying trust.";
+	case TRUST_E_NO_SIGNER_CERT:
+		return "The certificate for the signer of the message is invalid or not found.";
+	case TRUST_E_COUNTER_SIGNER:
+		return "One of the counter signatures was invalid.";
+	case TRUST_E_CERT_SIGNATURE:
+		return "The signature of the certificate cannot be verified.";
+	case TRUST_E_TIME_STAMP:
+		return "The timestamp could not be verified.";
+	case TRUST_E_BAD_DIGEST:
+		return "The file content has been altered.";
+	case TRUST_E_BASIC_CONSTRAINTS:
+		return "A certificate's basic constraint extension has not been observed.";
 	case TRUST_E_NOSIGNATURE:
 		return "Not digitally signed.";
 	case TRUST_E_EXPLICIT_DISTRUST:
 		return "One of the certificates used was marked as untrusted by the user.";
-	case TRUST_E_TIME_STAMP:
-		return "The timestamp could not be verified.";
 	default:
 		static_sprintf(error_string, "Unknown PKI error 0x%08lX", error_code);
 		return error_string;
@@ -205,14 +217,13 @@ const char* WinPKIErrorString(void)
 }
 
 // Mostly from https://support.microsoft.com/en-us/kb/323809
-char* GetSignatureName(const char* path, const char* country_code)
+char* GetSignatureName(const char* path, const char* country_code, BOOL bSilent)
 {
 	static char szSubjectName[128];
 	char szCountry[3] = "__";
 	char *p = NULL, *mpath = NULL;
 	int i;
 	BOOL r;
-	HMODULE hm;
 	HCERTSTORE hStore = NULL;
 	HCRYPTMSG hMsg = NULL;
 	PCCERT_CONTEXT pCertContext = NULL;
@@ -228,12 +239,7 @@ char* GetSignatureName(const char* path, const char* country_code)
 		szFileName = calloc(MAX_PATH, sizeof(wchar_t));
 		if (szFileName == NULL)
 			return NULL;
-		hm = GetModuleHandle(NULL);
-		if (hm == NULL) {
-			uprintf("PKI: Could not get current executable handle: %s", WinPKIErrorString());
-			goto out;
-		}
-		dwSize = GetModuleFileNameW(hm, szFileName, MAX_PATH);
+		dwSize = GetModuleFileNameW(NULL, szFileName, MAX_PATH);
 		if ((dwSize == 0) || ((dwSize == MAX_PATH) && (GetLastError() == ERROR_INSUFFICIENT_BUFFER))) {
 			uprintf("PKI: Could not get module filename: %s", WinPKIErrorString());
 			goto out;
@@ -314,9 +320,9 @@ char* GetSignatureName(const char* path, const char* country_code)
 	}
 
 	if (szCountry[0] == '_')
-		uprintf("Binary executable is signed by '%s'", szSubjectName);
+		suprintf("Binary executable is signed by '%s'", szSubjectName);
 	else
-		uprintf("Binary executable is signed by '%s' (%s)", szSubjectName, szCountry);
+		suprintf("Binary executable is signed by '%s' (%s)", szSubjectName, szCountry);
 	p = szSubjectName;
 
 out:
@@ -533,14 +539,15 @@ uint64_t GetSignatureTimeStamp(const char* path)
 	timestamp = GetRFC3161TimeStamp(pSignerInfo);
 	if (timestamp)
 		uprintf("Note: '%s' has timestamp %s", (path==NULL)?mpath:path, TimestampToHumanReadable(timestamp));
-	// Because we are currently using both SHA-1 and SHA-256 signatures, we are in the very specific
-	// situation that Windows may say our executable passes Authenticode validation on Windows 7 or
-	// later (which includes timestamp validation) even if the SHA-1 signature or timestamps have
-	// been altered.
-	// This means that, if we don't also check the nested SHA-256 signature timestamp, an attacker
-	// could alter the SHA-1 one (which is the one we use by default for chronology validation) and
+	// Because we were using both SHA-1 and SHA-256 signatures during the SHA-256 transition, we were
+	// in the very specific situation where Windows could say that our executable passed Authenticode
+	// validation even if the SHA-1 signature or timestamps had been altered.
+	// This means that, unless we also check the nested signature timestamp, an attacker could alter
+	// the most vulnerable signature (which may also be the one used for chronology validation) and
 	// trick us into using an invalid timestamp value. To prevent this, we validate that, if we have
 	// both a regular and nested timestamp, they are within 60 seconds of each other.
+	// Even as we are no longer dual signing with two versions of SHA, we keep the code in case a
+	// major SHA-256 vulnerability is found and we have to go through a dual SHA again.
 	nested_timestamp = GetNestedRFC3161TimeStamp(pSignerInfo);
 	if (nested_timestamp)
 		uprintf("Note: '%s' has nested timestamp %s", (path==NULL)?mpath:path, TimestampToHumanReadable(nested_timestamp));
@@ -566,7 +573,7 @@ out:
 // From https://msdn.microsoft.com/en-us/library/windows/desktop/aa382384.aspx
 LONG ValidateSignature(HWND hDlg, const char* path)
 {
-	LONG r;
+	LONG r = TRUST_E_SYSTEM_ERROR;
 	WINTRUST_DATA trust_data = { 0 };
 	WINTRUST_FILE_INFO trust_file = { 0 };
 	GUID guid_generic_verify =	// WINTRUST_ACTION_GENERIC_VERIFY_V2
@@ -578,10 +585,11 @@ LONG ValidateSignature(HWND hDlg, const char* path)
 	// Check the signature name. Make it specific enough (i.e. don't simply check for "Akeo")
 	// so that, besides hacking our server, it'll place an extra hurdle on any malicious entity
 	// into also fooling a C.A. to issue a certificate that passes our test.
-	signature_name = GetSignatureName(path, cert_country);
+	signature_name = GetSignatureName(path, cert_country, (hDlg == INVALID_HANDLE_VALUE));
 	if (signature_name == NULL) {
 		uprintf("PKI: Could not get signature name");
-		MessageBoxExU(hDlg, lmprintf(MSG_284), lmprintf(MSG_283), MB_OK | MB_ICONERROR | MB_IS_RTL, selected_langid);
+		if (hDlg != INVALID_HANDLE_VALUE)
+			MessageBoxExU(hDlg, lmprintf(MSG_284), lmprintf(MSG_283), MB_OK | MB_ICONERROR | MB_IS_RTL, selected_langid);
 		return TRUST_E_NOSIGNATURE;
 	}
 	for (i = 0; i < ARRAYSIZE(cert_name); i++) {
@@ -590,8 +598,9 @@ LONG ValidateSignature(HWND hDlg, const char* path)
 	}
 	if (i >= ARRAYSIZE(cert_name)) {
 		uprintf("PKI: Signature '%s' is unexpected...", signature_name);
-		if (MessageBoxExU(hDlg, lmprintf(MSG_285, signature_name), lmprintf(MSG_283),
-			MB_YESNO | MB_ICONWARNING | MB_IS_RTL, selected_langid) != IDYES)
+		if ((hDlg == INVALID_HANDLE_VALUE) || (MessageBoxExU(hDlg,
+			lmprintf(MSG_285, signature_name), lmprintf(MSG_283),
+			MB_YESNO | MB_ICONWARNING | MB_IS_RTL, selected_langid) != IDYES))
 			return TRUST_E_EXPLICIT_DISTRUST;
 	}
 
@@ -617,10 +626,15 @@ LONG ValidateSignature(HWND hDlg, const char* path)
 	trust_data.dwUnionChoice = WTD_CHOICE_FILE;
 	trust_data.pFile = &trust_file;
 
+	// NB: Calling this API will create DLL sideloading issues through 'msasn1.dll'.
+	// So make sure you delay-load 'wintrust.dll' in your application.
 	r = WinVerifyTrustEx(INVALID_HANDLE_VALUE, &guid_generic_verify, &trust_data);
 	safe_free(trust_file.pcwszFilePath);
 	switch (r) {
 	case ERROR_SUCCESS:
+		// hDlg = INVALID_HANDLE_VALUE is used when validating the Fido PS1 script
+		if (hDlg == INVALID_HANDLE_VALUE)
+			break;
 		// Verify that the timestamp of the downloaded update is in the future of our current one.
 		// This is done to prevent the use of an officially signed, but older binary, as potential attack vector.
 		current_ts = GetSignatureTimeStamp(NULL);
@@ -640,11 +654,13 @@ LONG ValidateSignature(HWND hDlg, const char* path)
 	case TRUST_E_NOSIGNATURE:
 		// Should already have been reported, but since we have a custom message for it...
 		uprintf("PKI: File does not appear to be signed: %s", WinPKIErrorString());
-		MessageBoxExU(hDlg, lmprintf(MSG_284), lmprintf(MSG_283), MB_OK | MB_ICONERROR | MB_IS_RTL, selected_langid);
+		if (hDlg != INVALID_HANDLE_VALUE)
+			MessageBoxExU(hDlg, lmprintf(MSG_284), lmprintf(MSG_283), MB_OK | MB_ICONERROR | MB_IS_RTL, selected_langid);
 		break;
 	default:
 		uprintf("PKI: Failed to validate signature: %s", WinPKIErrorString());
-		MessageBoxExU(hDlg, lmprintf(MSG_240), lmprintf(MSG_283), MB_OK | MB_ICONERROR | MB_IS_RTL, selected_langid);
+		if (hDlg != INVALID_HANDLE_VALUE)
+			MessageBoxExU(hDlg, lmprintf(MSG_240), lmprintf(MSG_283), MB_OK | MB_ICONERROR | MB_IS_RTL, selected_langid);
 		break;
 	}
 

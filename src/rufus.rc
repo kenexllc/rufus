@@ -33,7 +33,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDD_DIALOG DIALOGEX 12, 12, 232, 326
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_ACCEPTFILES
-CAPTION "Rufus 3.6.1550"
+CAPTION "Rufus 4.1.2043"
 FONT 9, "Segoe UI Symbol", 400, 0, 0x0
 BEGIN
     LTEXT           "Drive Properties",IDS_DRIVE_PROPERTIES_TXT,8,6,53,12,NOT WS_GROUP
@@ -95,18 +95,20 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,253,216,50,12,WS_GROUP
 END
 
-IDD_CHECKSUM DIALOGEX 0, 0, 301, 70
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_CHECKSUM DIALOGEX 0, 0, 301, 110
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Checksums"
 FONT 9, "Segoe UI Symbol", 400, 0, 0x0
 BEGIN
     LTEXT           "MD5:",IDC_STATIC,9,10,18,8
-    EDITTEXT        IDC_MD5,40,9,197,12,ES_LOWERCASE | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_MD5,40,9,197,12,ES_AUTOHSCROLL | ES_READONLY
     LTEXT           "SHA1:",IDC_STATIC,9,26,20,8
-    EDITTEXT        IDC_SHA1,40,25,197,12,ES_LOWERCASE | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_SHA1,40,25,197,12,ES_AUTOHSCROLL | ES_READONLY
     LTEXT           "SHA256:",IDC_STATIC,9,42,27,8
-    EDITTEXT        IDC_SHA256,40,41,197,22,ES_MULTILINE | ES_LOWERCASE | ES_READONLY
-    DEFPUSHBUTTON   "OK",IDOK,243,49,50,12,WS_GROUP
+    EDITTEXT        IDC_SHA256,40,41,197,22,ES_MULTILINE | ES_READONLY
+    DEFPUSHBUTTON   "OK",IDOK,243,86,50,12,WS_GROUP
+    LTEXT           "SHA512:",IDC_STATIC,9,69,27,8
+    EDITTEXT        IDC_SHA512,40,67,197,35,ES_MULTILINE | ES_READONLY
 END
 
 IDD_LICENSE DIALOGEX 0, 0, 335, 213
@@ -156,22 +158,23 @@ BEGIN
     LTEXT           "Message",IDC_SELECTION_TEXT,35,5,269,8
     DEFPUSHBUTTON   "OK",IDOK,196,53,50,12
     PUSHBUTTON      "Cancel",IDCANCEL,254,53,50,12
-    CONTROL         "Choice 1",IDC_SELECTION_CHOICE1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,35,18,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 2",IDC_SELECTION_CHOICE2,"Button",BS_AUTORADIOBUTTON,35,31,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 3",IDC_SELECTION_CHOICE3,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,44,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 4",IDC_SELECTION_CHOICE4,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,57,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 5",IDC_SELECTION_CHOICE5,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,70,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 6",IDC_SELECTION_CHOICE6,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,83,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 7",IDC_SELECTION_CHOICE7,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,96,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 8",IDC_SELECTION_CHOICE8,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,109,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 9",IDC_SELECTION_CHOICE9,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,122,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 10",IDC_SELECTION_CHOICE10,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,135,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 11",IDC_SELECTION_CHOICE11,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,148,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 12",IDC_SELECTION_CHOICE12,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,161,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 13",IDC_SELECTION_CHOICE13,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,174,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 14",IDC_SELECTION_CHOICE14,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,187,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 15",IDC_SELECTION_CHOICE15,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,200,269,10,WS_EX_TRANSPARENT
-    CONTROL         "Choice 16",IDC_SELECTION_CHOICEMAX,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE,35,213,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 1",IDC_SELECTION_CHOICE1,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,35,18,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 2",IDC_SELECTION_CHOICE2,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,31,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 3",IDC_SELECTION_CHOICE3,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,44,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 4",IDC_SELECTION_CHOICE4,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,57,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 5",IDC_SELECTION_CHOICE5,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,70,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 6",IDC_SELECTION_CHOICE6,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,83,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 7",IDC_SELECTION_CHOICE7,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,96,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 8",IDC_SELECTION_CHOICE8,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,109,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 9",IDC_SELECTION_CHOICE9,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,122,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 10",IDC_SELECTION_CHOICE10,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,135,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 11",IDC_SELECTION_CHOICE11,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,148,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 12",IDC_SELECTION_CHOICE12,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,161,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 13",IDC_SELECTION_CHOICE13,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,174,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 14",IDC_SELECTION_CHOICE14,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,187,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 15",IDC_SELECTION_CHOICE15,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,200,269,10,WS_EX_TRANSPARENT
+    CONTROL         "Choice 16",IDC_SELECTION_CHOICEMAX,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_TABSTOP,35,213,269,10,WS_EX_TRANSPARENT
+    EDITTEXT        IDC_SELECTION_USERNAME,197,57,0,9,ES_AUTOHSCROLL | NOT WS_VISIBLE | WS_TABSTOP | WS_BORDER
 END
 
 IDD_LIST DIALOGEX 0, 0, 312, 59
@@ -264,11 +267,7 @@ END
 3 TEXTINCLUDE 
 BEGIN
     "\r\n"
-    "#ifdef RUFUS_LOC\r\n"
-    "IDR_LC_RUFUS_LOC        RCDATA                  ""../res/loc/rufus.loc""\r\n"
-    "#else\r\n"
     "IDR_LC_RUFUS_LOC        RCDATA                  ""../res/loc/embedded.loc""\r\n"
-    "#endif\r\n"
     "IDR_SL_LDLINUX_V4_BSS   RCDATA                  ""../res/syslinux/ldlinux_v4.bss""\r\n"
     "IDR_SL_LDLINUX_V4_SYS   RCDATA                  ""../res/syslinux/ldlinux_v4.sys""\r\n"
     "IDR_SL_LDLINUX_V6_BSS   RCDATA                  ""../res/syslinux/ldlinux_v6.bss""\r\n"
@@ -276,6 +275,7 @@ BEGIN
     "IDR_SL_MBOOT_C32        RCDATA                  ""../res/syslinux/mboot.c32""\r\n"
     "IDR_GR_GRUB_GRLDR_MBR   RCDATA                  ""../res/grub/grldr.mbr""\r\n"
     "IDR_GR_GRUB2_CORE_IMG   RCDATA                  ""../res/grub2/core.img""\r\n"
+    "IDR_SBR_MSG             RCDATA                  ""../res/mbr/msg.txt""\r\n"
     "IDR_FD_COMMAND_COM      RCDATA                  ""../res/freedos/COMMAND.COM""\r\n"
     "IDR_FD_KERNEL_SYS       RCDATA                  ""../res/freedos/KERNEL.SYS""\r\n"
     "IDR_FD_DISPLAY_EXE      RCDATA                  ""../res/freedos/DISPLAY.EXE""\r\n"
@@ -305,8 +305,6 @@ BEGIN
     "IDR_FD_EGA18_CPX        RCDATA                  ""../res/freedos/EGA18.CPX""\r\n"
     "IDR_XT_HOGGER           RCDATA                  ""../res/hogger/hogger.exe""\r\n"
     "IDR_UEFI_NTFS           RCDATA                  ""../res/uefi/uefi-ntfs.img""\r\n"
-    "IDR_TOGO_SAN_POLICY_XML RCDATA                  ""../res/togo/san_policy.xml""\r\n"
-    "IDR_TOGO_UNATTEND_XML   RCDATA                  ""../res/togo/unattend.xml""\r\n"
     "IDI_LANG_16             RCDATA                  ""../res/icons/lang-16.png""\r\n"
     "IDI_INFO_16             RCDATA                  ""../res/icons/info-16.png""\r\n"
     "IDI_SETTINGS_16         RCDATA                  ""../res/icons/settings-16.png""\r\n"
@@ -394,8 +392,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,6,1550,0
- PRODUCTVERSION 3,6,1550,0
+ FILEVERSION 4,1,2043,0
+ PRODUCTVERSION 4,1,2043,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -410,16 +408,16 @@ BEGIN
     BEGIN
         BLOCK "000004b0"
         BEGIN
-            VALUE "Comments", "https://akeo.ie"
+            VALUE "Comments", "https://rufus.ie"
             VALUE "CompanyName", "Akeo Consulting"
             VALUE "FileDescription", "Rufus"
-            VALUE "FileVersion", "3.6.1550"
+            VALUE "FileVersion", "4.1.2043"
             VALUE "InternalName", "Rufus"
-            VALUE "LegalCopyright", "© 2011-2019 Pete Batard (GPL v3)"
-            VALUE "LegalTrademarks", "https://www.gnu.org/copyleft/gpl.html"
-            VALUE "OriginalFilename", "rufus-3.6.exe"
+            VALUE "LegalCopyright", "© 2011-2023 Pete Batard (GPL v3)"
+            VALUE "LegalTrademarks", "https://www.gnu.org/licenses/gpl-3.0.html"
+            VALUE "OriginalFilename", "rufus-4.1.exe"
             VALUE "ProductName", "Rufus"
-            VALUE "ProductVersion", "3.6.1550"
+            VALUE "ProductVersion", "4.1.2043"
         END
     END
     BLOCK "VarFileInfo"
@@ -449,11 +447,7 @@ IDI_ICON                ICON                    "../res/rufus.ico"
 // Generated from the TEXTINCLUDE 3 resource.
 //
 
-#ifdef RUFUS_LOC
-IDR_LC_RUFUS_LOC        RCDATA                  "../res/loc/rufus.loc"
-#else
 IDR_LC_RUFUS_LOC        RCDATA                  "../res/loc/embedded.loc"
-#endif
 IDR_SL_LDLINUX_V4_BSS   RCDATA                  "../res/syslinux/ldlinux_v4.bss"
 IDR_SL_LDLINUX_V4_SYS   RCDATA                  "../res/syslinux/ldlinux_v4.sys"
 IDR_SL_LDLINUX_V6_BSS   RCDATA                  "../res/syslinux/ldlinux_v6.bss"
@@ -461,6 +455,7 @@ IDR_SL_LDLINUX_V6_SYS   RCDATA                  "../res/syslinux/ldlinux_v6.sys"
 IDR_SL_MBOOT_C32        RCDATA                  "../res/syslinux/mboot.c32"
 IDR_GR_GRUB_GRLDR_MBR   RCDATA                  "../res/grub/grldr.mbr"
 IDR_GR_GRUB2_CORE_IMG   RCDATA                  "../res/grub2/core.img"
+IDR_SBR_MSG             RCDATA                  "../res/mbr/msg.txt"
 IDR_FD_COMMAND_COM      RCDATA                  "../res/freedos/COMMAND.COM"
 IDR_FD_KERNEL_SYS       RCDATA                  "../res/freedos/KERNEL.SYS"
 IDR_FD_DISPLAY_EXE      RCDATA                  "../res/freedos/DISPLAY.EXE"
@@ -490,8 +485,6 @@ IDR_FD_EGA17_CPX        RCDATA                  "../res/freedos/EGA17.CPX"
 IDR_FD_EGA18_CPX        RCDATA                  "../res/freedos/EGA18.CPX"
 IDR_XT_HOGGER           RCDATA                  "../res/hogger/hogger.exe"
 IDR_UEFI_NTFS           RCDATA                  "../res/uefi/uefi-ntfs.img"
-IDR_TOGO_SAN_POLICY_XML RCDATA                  "../res/togo/san_policy.xml"
-IDR_TOGO_UNATTEND_XML   RCDATA                  "../res/togo/unattend.xml"
 IDI_LANG_16             RCDATA                  "../res/icons/lang-16.png"
 IDI_INFO_16             RCDATA                  "../res/icons/info-16.png"
 IDI_SETTINGS_16         RCDATA                  "../res/icons/settings-16.png"

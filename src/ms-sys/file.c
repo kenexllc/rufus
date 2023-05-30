@@ -48,7 +48,7 @@ int64_t write_sectors(HANDLE hDrive, uint64_t SectorSize,
    }
 
    LastWriteError = 0;
-   if(!WriteFile(hDrive, pBuf, Size, &Size, NULL))
+   if(!WriteFileWithRetry(hDrive, pBuf, Size, &Size, WRITE_RETRIES))
    {
       LastWriteError = ERROR_SEVERITY_ERROR|FAC(FACILITY_STORAGE)|GetLastError();
       uprintf("write_sectors: Write error %s\n", WindowsErrorString());
@@ -181,8 +181,7 @@ int write_data(FILE *fp, uint64_t Position,
 {
    int r = 0;
    /* Windows' WriteFile() may require a buffer that is aligned to the sector size */
-   /* TODO: We may need to increase the alignment if we get report of issues on 4K */
-   unsigned char *aucBuf = _mm_malloc(MAX_DATA_LEN, 512);
+   unsigned char *aucBuf = _mm_malloc(MAX_DATA_LEN, 4096);
    FAKE_FD* fd = (FAKE_FD*)fp;
    HANDLE hDrive = (HANDLE)fd->_handle;
    uint64_t StartSector, EndSector, NumSectors;

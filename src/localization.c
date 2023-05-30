@@ -1,7 +1,7 @@
 /*
  * Rufus: The Reliable USB Formatting Utility
  * Localization functions, a.k.a. "Everybody is doing it wrong but me!"
- * Copyright © 2013-2017 Pete Batard <pete@akeo.ie>
+ * Copyright © 2013-2023 Pete Batard <pete@akeo.ie>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -378,7 +378,7 @@ char* lmprintf(uint32_t msg_id, ...)
 	}
 
 	if (format == NULL) {
-		safe_sprintf(buf[buf_id], LOC_MESSAGE_SIZE-1, "MSG_%03d UNTRANSLATED", msg_id - MSG_000);
+		safe_sprintf(buf[buf_id], LOC_MESSAGE_SIZE-1, "MSG_%03u UNTRANSLATED", msg_id - MSG_000);
 	} else {
 		if (right_to_left_mode && (msg_table != default_msg_table)) {
 			if (is_rtf) {
@@ -389,7 +389,7 @@ char* lmprintf(uint32_t msg_id, ...)
 			pos += sizeof(RIGHT_TO_LEFT_EMBEDDING) - 1;
 		}
 		va_start(args, msg_id);
-		safe_vsnprintf(&buf[buf_id][pos], LOC_MESSAGE_SIZE- 1 - 2*pos, format, args);
+		safe_vsnprintf(&buf[buf_id][pos], LOC_MESSAGE_SIZE - 1 - 2*pos, format, args);
 		va_end(args);
 		if (right_to_left_mode && (msg_table != default_msg_table)) {
 			safe_strcat(buf[buf_id], LOC_MESSAGE_SIZE - 1, POP_DIRECTIONAL_FORMATTING);
@@ -513,7 +513,7 @@ void PrintStatusInfo(BOOL info, BOOL debug, unsigned int duration, int msg_id, .
 	va_start(args, msg_id);
 	safe_vsnprintf(msg_cur, MSG_LEN, format, args);
 	va_end(args);
-	msg_cur[MSG_LEN-1] = '\0';
+	msg_cur[MSG_LEN - 1] = '\0';
 
 	if ((duration != 0) || (!bStatusTimerArmed))
 		OutputMessage(info, msg_cur);
@@ -534,8 +534,9 @@ void PrintStatusInfo(BOOL info, BOOL debug, unsigned int duration, int msg_id, .
 		va_start(args, msg_id);
 		safe_vsnprintf(buf, MSG_LEN, format, args);
 		va_end(args);
-		buf[MSG_LEN-1] = '\0';
-		uprintf(buf);
+		buf[MSG_LEN - 1] = '\0';
+		// buf may(?) containt a '%' so don't feed it as a naked format string
+		uprintf("%s", buf);
 	}
 }
 
@@ -627,7 +628,7 @@ const char* get_name_from_id(int id)
  * pack having been installed.
  */
 static BOOL found_lang;
-static BOOL CALLBACK EnumUILanguagesProc(LPTSTR lpUILanguageString, LONG_PTR lParam)
+static BOOL CALLBACK EnumUILanguagesProc(LPWSTR lpUILanguageString, LONG_PTR lParam)
 {
 	wchar_t* wlang = (wchar_t*)lParam;
 	if (wcscmp(wlang, lpUILanguageString) == 0)

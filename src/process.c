@@ -4,7 +4,7 @@
  *
  * Modified from Process Hacker:
  *   https://github.com/processhacker2/processhacker2/
- * Copyright © 2017-2019 Pete Batard <pete@akeo.ie>
+ * Copyright © 2017-2023 Pete Batard <pete@akeo.ie>
  * Copyright © 2017 dmex
  * Copyright © 2009-2016 wj32
  *
@@ -51,9 +51,6 @@ PF_TYPE_DECL(NTAPI, NTSTATUS, NtOpenProcess, (PHANDLE, ACCESS_MASK, POBJECT_ATTR
 PF_TYPE_DECL(NTAPI, NTSTATUS, NtOpenProcessToken, (HANDLE, ACCESS_MASK, PHANDLE));
 PF_TYPE_DECL(NTAPI, NTSTATUS, NtAdjustPrivilegesToken, (HANDLE, BOOLEAN, PTOKEN_PRIVILEGES, ULONG, PTOKEN_PRIVILEGES, PULONG));
 PF_TYPE_DECL(NTAPI, NTSTATUS, NtClose, (HANDLE));
-
-// This one is only available on Vista or later...
-PF_TYPE_DECL(WINAPI, BOOL, QueryFullProcessImageNameW, (HANDLE, DWORD, LPWSTR, PDWORD));
 
 static PVOID PhHeapHandle = NULL;
 static wchar_t* _wHandleName;
@@ -481,7 +478,14 @@ static DWORD WINAPI SearchProcessThread(LPVOID param)
 
 		// Update the current handle's process PID and compare against last
 		// Note: Be careful about not trying to overflow our list!
-		pid[cur_pid] = (handleInfo != NULL) ? handleInfo->UniqueProcessId : -1;
+		// Also, we are seeing reports of application crashes due to access
+		// violation exceptions here, so, since this is not critical code,
+		// we add an exception handler to ignore them.
+		TRY_AND_HANDLE(
+			EXCEPTION_ACCESS_VIOLATION,
+			{ pid[cur_pid] = (handleInfo != NULL) ? handleInfo->UniqueProcessId : -1; },
+			{ continue; }
+		);
 
 		if (pid[0] != pid[1]) {
 			cur_pid = (cur_pid + 1) % 2;
@@ -489,7 +493,8 @@ static DWORD WINAPI SearchProcessThread(LPVOID param)
 			// If we're switching process and found a match, print it
 			if (bFound) {
 				static_sprintf (tmp, "● [%06u] %s (%s)", (uint32_t)pid[cur_pid], cmdline, access_rights_str[access_rights & 0x7]);
-				vuprintf(tmp);
+				// tmp may contain a '%' so don't feed it as a naked format string
+				vuprintf("%s", tmp);
 				StrArrayAdd(&BlockingProcess, tmp, TRUE);
 				bFound = FALSE;
 				access_rights = 0;
@@ -508,6 +513,9 @@ static DWORD WINAPI SearchProcessThread(LPVOID param)
 		// Exit loop condition
 		if (i >= handles->NumberOfHandles)
 			break;
+
+		if (handleInfo == NULL)
+			continue;
 
 		// Don't bother with processes we can't access
 		if (handleInfo->UniqueProcessId == last_access_denied_pid)
@@ -598,6 +606,7 @@ static DWORD WINAPI SearchProcessThread(LPVOID param)
 
 		// Where possible, try to get the full command line
 		bGotCmdLine = FALSE;
+		size = MAX_PATH;
 		wcmdline = GetProcessCommandLine(processHandle);
 		if (wcmdline != NULL) {
 			bGotCmdLine = TRUE;
@@ -609,12 +618,10 @@ static DWORD WINAPI SearchProcessThread(LPVOID param)
 		if (!bGotCmdLine)
 			bGotCmdLine = (GetModuleFileNameExU(processHandle, 0, cmdline, MAX_PATH - 1) != 0);
 
-		// The above may not work on Windows 7, so try QueryFullProcessImageName (Vista or later)
+		// The above may not work on all Windows version, so fall back to QueryFullProcessImageName
 		if (!bGotCmdLine) {
-			size = MAX_PATH;
-			PF_INIT(QueryFullProcessImageNameW, kernel32);
-			if ( (pfQueryFullProcessImageNameW != NULL) &&
-				 (bGotCmdLine = pfQueryFullProcessImageNameW(processHandle, 0, wexe_path, &size)) )
+			bGotCmdLine = (QueryFullProcessImageNameW(processHandle, 0, wexe_path, &size) != FALSE);
+			if (bGotCmdLine)
 				wchar_to_utf8_no_alloc(wexe_path, cmdline, sizeof(cmdline));
 		}
 
@@ -654,7 +661,7 @@ out:
  * \param bIgnoreSelf Whether the current process should be listed.
  * \param bQuiet Prints minimal output.
  *
- * \return a byte containing the cummulated access rights (f----xwr) from all the handles found
+ * \return a byte containing the cumulated access rights (f----xwr) from all the handles found
  *         with bit 7 ('f') also set if at least one process was found.
  */
 BYTE SearchProcess(char* HandleName, DWORD dwTimeOut, BOOL bPartialMatch, BOOL bIgnoreSelf, BOOL bQuiet)
@@ -721,7 +728,7 @@ BOOL SearchProcessAlt(char* HandleName)
 		bFound = TRUE;
 		uprintf("WARNING: The following process(es) or service(s) are accessing %s:", HandleName);
 		for (i = 0; i < info->NumberOfProcessIdsInList; i++) {
-			uprintf("o Process with PID %ld", info->ProcessIdList[i]);
+			uprintf("o Process with PID %llu", (uint64_t)info->ProcessIdList[i]);
 		}
 	}
 
@@ -757,7 +764,7 @@ BOOL EnablePrivileges(void)
 
 	if (NT_SUCCESS(status)) {
 		CHAR privilegesBuffer[FIELD_OFFSET(TOKEN_PRIVILEGES, Privileges) +
-			sizeof(LUID_AND_ATTRIBUTES) * ARRAYSIZE(requestedPrivileges)];
+			sizeof(LUID_AND_ATTRIBUTES) * ARRAYSIZE(requestedPrivileges)] = { 0 };
 		PTOKEN_PRIVILEGES privileges;
 		ULONG i;
 
